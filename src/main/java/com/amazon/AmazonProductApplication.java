@@ -11,16 +11,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
+import com.amazon.Config.RibbonConfiguration;
+import com.amazon.ProxyServerFign.ProductManufacturerProxy;
+import com.amazon.ProxyServerFign.ProductManufacturerProxyImpl;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 
 @EnableFeignClients("com.amazon")
 @EnableDiscoveryClient
-//@RibbonClient(name = "ProductManufacturer", configuration = RibbonConfiguration.class)
+@RibbonClient(name = "ProductManufacturer", configuration = RibbonConfiguration.class)
 @SpringBootApplication
 public class AmazonProductApplication {
 
@@ -51,6 +57,17 @@ public class AmazonProductApplication {
 			builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimeFormat)));
 			builder.serializers(new ZonedDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimeFormat)));
 		};
+	}
+	
+	@Bean
+	@LoadBalanced
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+
+	@Bean
+	public ProductManufacturerProxy proxyServer() {
+		return new ProductManufacturerProxyImpl();
 	}
 
 }
