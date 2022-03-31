@@ -24,6 +24,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 
+import brave.sampler.Sampler;
+
 @EnableFeignClients("com.amazon")
 @EnableDiscoveryClient
 @RibbonClient(name = "ProductManufacturer", configuration = RibbonConfiguration.class)
@@ -63,6 +65,11 @@ public class AmazonProductApplication {
 	@LoadBalanced
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public Sampler defaultSampler() {
+		return Sampler.ALWAYS_SAMPLE;
 	}
 
 	@Bean
