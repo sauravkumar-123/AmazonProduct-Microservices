@@ -123,6 +123,18 @@ public class AmazonProductServiceImpl implements AmazonProductService {
 		}
 	}
 
+	@Override
+	public AmazonProduct getAmazonProductByProductCode(String productCode) {
+		Optional<AmazonProduct> chkPoint = amazonProductRepository.findByProductCodeAndIsActive(productCode, 'Y');
+		if (chkPoint.isPresent()) {
+			AmazonProduct amazonProduct = chkPoint.get();
+			logger.info("Fetch flipcartProduct Detail:{}" + amazonProduct);
+			return amazonProduct;
+		} else {
+			throw new NullPointerException("Products Details Not Found With productCode: " + productCode);
+		}
+	}
+
 	@Transactional(rollbackOn = Exception.class)
 	@Override
 	public AmazonProduct updateAmazonProductDetailsByProductcode(String productCode,

@@ -18,6 +18,8 @@ public interface AmazonProductService {
 
 	public List<AmazonProduct> getAmazonProductBySerachKey(String searchKey);
 
+	public AmazonProduct getAmazonProductByProductCode(String productCode);
+
 	public AmazonProduct updateAmazonProductDetailsByProductcode(String productcode,
 			AmazonProduct productDetailsRequest);
 

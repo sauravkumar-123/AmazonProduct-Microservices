@@ -123,6 +123,19 @@ public class AmazonProductController {
 		}
 	}
 
+	@GetMapping("/get-productBycode/{productCode}")
+	public ResponseEntity<AmazonProductResponse> getProductByProductCode(
+			@PathVariable("productCode") String productCode) {
+		AmazonProduct amazonProduct = productService.getAmazonProductByProductCode(productCode);
+		if (null != amazonProduct) {
+			return new ResponseEntity<AmazonProductResponse>(
+					new AmazonProductResponse(true, "Product Detail Fetched", amazonProduct), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<AmazonProductResponse>(
+					new AmazonProductResponse(false, "Product Detail Not Found", amazonProduct), HttpStatus.NOT_FOUND);
+		}
+	}
+
 	@PutMapping("/update-productdetails/{productCode}")
 	public ResponseEntity<AmazonProductResponse> updateProductdetailsByProductcode(
 			@PathVariable("productCode") String productCode,
